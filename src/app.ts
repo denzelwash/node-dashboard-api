@@ -1,7 +1,7 @@
 import express, { Express } from 'express'
 import { userRouter } from './users/users.js'
 import { Server } from 'http'
-import { LoggerService } from './loger/loger.service'
+import { LoggerService } from './logger/logger.service'
 
 export class App {
   app: Express

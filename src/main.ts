@@ -1,5 +1,5 @@
 import { App } from './app.js'
-import { LoggerService } from './loger/loger.service'
+import { LoggerService } from './logger/logger.service'
 
 const bootstrap = async () => {
   const app = new App(new LoggerService())
