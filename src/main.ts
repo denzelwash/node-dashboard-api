@@ -1,18 +1,25 @@
-import { Container } from 'inversify'
-import { App } from './app.js'
-import { ExeptionFilter } from './errors/exeption.filter.js'
-import { LoggerService } from './logger/logger.service'
-import { ILogger } from './logger/logger.interface'
-import { TYPES } from './types.js'
-import { UserController } from './users/users.controller.js'
+import { Container, ContainerModule, interfaces } from 'inversify'
+import { App } from './app'
+import { ExeptionFilter } from './errors/exeption.filter'
 import { IExeptionFilter } from './errors/exeption.filter.interface'
+import { ILogger } from './logger/logger.interface'
+import { LoggerService } from './logger/logger.service'
+import { TYPES } from './types'
+import { UserController } from './users/users.controller'
 
-const appContainer = new Container()
-appContainer.bind<ILogger>(TYPES.ILogger).to(LoggerService)
-appContainer.bind<IExeptionFilter>(TYPES.ExeptionFilter).to(ExeptionFilter)
-appContainer.bind<UserController>(TYPES.UserController).to(UserController)
-appContainer.bind<App>(TYPES.Aplication).to(App)
-const app = appContainer.get<App>(TYPES.Aplication)
-app.init()
+export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
+	bind<ILogger>(TYPES.ILogger).to(LoggerService)
+	bind<IExeptionFilter>(TYPES.ExeptionFilter).to(ExeptionFilter)
+	bind<UserController>(TYPES.UserController).to(UserController)
+	bind<App>(TYPES.Application).to(App)
+})
 
-export {app, appContainer}
+function bootstrap() {
+	const appContainer = new Container()
+	appContainer.load(appBindings)
+	const app = appContainer.get<App>(TYPES.Application)
+	app.init()
+	return { appContainer, app }
+}
+
+export const { app, appContainer } = bootstrap()
